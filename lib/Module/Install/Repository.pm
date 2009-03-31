@@ -2,7 +2,7 @@ package Module::Install::Repository;
 
 use strict;
 use 5.008_001;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use base qw(Module::Install::Base);
 
@@ -27,6 +27,8 @@ sub _find_repo {
             my $git_url = $1;
             $git_url =~ s![\w\-]+\@([^:]+):!git://$1/!;
             return $git_url;
+        } elsif (`git svn info` =~ /URL: (.*)$/m) {
+            return $1;
         }
     } elsif (-e ".svn") {
         if (`svn info` =~ /URL: (.*)$/m) {
@@ -68,7 +70,7 @@ __END__
 
 =encoding utf-8
 
-=for stopwords github.com META.yml
+=for stopwords github.com META.yml Darcs
 
 =head1 NAME
 
@@ -96,7 +98,9 @@ module currently works only with github.com style.
 
 Tatsuhiko Miyagawa E<lt>miyagawa@bulknews.netE<gt>
 
-Darcs support by Shawn M Moore.
+Darcs support by Shawn M Moore
+
+git-svn support by Tokuhiro Matsuno
 
 =head1 LICENSE
 
